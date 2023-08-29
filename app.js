@@ -25,8 +25,37 @@ const capitalized = string => string[0].toUpperCase() + string.slice(1).toLowerC
 app.locals.title = `${capitalized(projectName)}- Generated with Ironlauncher`;
 
 // 👇 Start handling routes here
+
 const index = require('./routes/index');
 app.use('/', index);
+
+
+const Movie = require('./models/Movie.model'); 
+
+app.get('/movies', (req, res) => {
+
+    Movie.find()
+
+      .then(movies => {
+        res.render('movies', { movies });
+      })
+      
+      .catch(error => console.error(error));
+  });
+
+
+app.get('/movies/:id', (req, res) => {
+    const movieId = req.params.id;
+
+    Movie.findById(movieId)
+
+      .then(movie => {
+        res.render('movie-details', { movie });
+      })
+
+      .catch(error => console.error(error));
+  });
+
 
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require('./error-handling')(app);
